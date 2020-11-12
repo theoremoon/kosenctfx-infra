@@ -1,0 +1,31 @@
+- name: Block access to metadata from container
+  iptables:
+    chain: DOCKER-USER
+    action: insert
+    source: 172.17.0.0/16
+    destination: 169.254.0.0/16
+    jump: DROP
+
+# IPのblocklistをipsetで管理する
+# ipsetはansibleのbuiltinではないので仕方なくshellを使う
+- name: Create temporary blocklist directory
+  tempfile:
+    state: directory
+  register: tmpdir
+
+- name: Copy blocklist to the servery
+  copy:
+    src: "ipv4_blocklist"
+    dest: "{{ tmpdir.path }}/ipv4_blocklist"
+
+- name: Renew ipset
+  shell:
+    cmd: "ipset n {{ ipset.v4name }} hash:ip; ipset flush {{ ipset.v4name}}"
+
+- name: Register ips to ipset
+  shell:
+    cmd: 'while read -r ip; do ipset add "{{ ipset.v4name }}" "$ip"; done < "{{ tmpdir.path }}/ipv4_blocklist"'
+
+- name: Add ipset to iptables
+  shell:
+    cmd: 'iptables -I INPUT -m set --match-set "{{ ipset.v4name }}" src -j DROP && iptables -I INPUT -m set --match-set "{{ ipset.v4name }}" src -j DROP'

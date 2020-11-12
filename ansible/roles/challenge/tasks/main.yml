@@ -1,0 +1,12 @@
+- name: Copy a challenge directory to the server
+  copy:
+    src: "../../../../challenge/{{ challenge }}"
+    dest: "/home/{{ username }}"
+
+# community.general.docker-compose はなんかうまく動かない
+- name: Start challenge
+  shell:
+    chdir: "/home/{{ username }}/{{ challenge | basename }}"
+    cmd: "docker-compose up -d"
+
+
