@@ -84,6 +84,8 @@ This file doesn't support any of IP-range format, comment, ipv6 address, and emp
 
 - [ ] Support ipv6 blocklist.
 - [ ] Support deploying non-dockerized challenges.
+- [ ] Support challenge status check.
+
 
 ## Author
 
