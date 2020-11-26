@@ -2,16 +2,17 @@
   become: yes
   roles:
     - common
+    - sendtobucket
     - user
     - docker
     - iptables
-# - hosts: host1
-#   become: no
-#   remote_user: "{{ username }}"
-#   tasks:
-#     - include_role:
-#         name: challenge
-#       with_items: [ "crypto/padding_oracle" ]
-#       loop_control:
-#         loop_var: "challenge"
+    # - hosts: host1
+    #   become: no
+    #   remote_user: "{{ username }}"
+    #   tasks:
+    #     - include_role:
+    #         name: challenge
+    #       with_items: [ "crypto/padding_oracle" ]
+    #       loop_control:
+    #         loop_var: "challenge"
 

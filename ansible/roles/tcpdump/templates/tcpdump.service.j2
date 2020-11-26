@@ -1,0 +1,10 @@
+[Unit]
+After=network.target
+
+[Service]
+Restart=on-abnormal
+ExecStart=/usr/sbin/tcpdump -w '/tmp/{{chal}}-%%F-%%T.pcap' -z sendtobucket -G 3600 port {{task.port}}
+Type=simple
+
+[Install]
+WantedBy=multi-user.target

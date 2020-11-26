@@ -1,0 +1,16 @@
+- name: Place tcpdump daemon config file
+  template:
+    src: tcpdump.service.j2
+    dest: "/etc/systemd/system/tcpdump-{{chal}}.service"
+    owner: root
+    group: root
+    mode: 0644
+  become: yes
+
+- name: Run daemon
+  systemd:
+    name: "tcpdump-{{chal}}.service"
+    state: started
+    daemon_reload: yes
+    enabled: yes
+  become: yes

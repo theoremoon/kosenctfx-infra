@@ -13,7 +13,7 @@
     name: "{{ packages }}"
     update_cache: yes
   vars:
-    packages: ["zsh", "vim", "curl", "iptables", "ipset"]
+    packages: ["zsh", "vim", "curl", "iptables", "ipset", "tcpdump", "python3-pip"]
 
 - name: sudo without password
   lineinfile:
@@ -21,3 +21,8 @@
     state: present
     regexp: "^%sudo"
     line: "%sudo ALL=(ALL) NOPASSWD: ALL"
+
+- name: install s3cmd
+  pip:
+    name: s3cmd
+    state: present

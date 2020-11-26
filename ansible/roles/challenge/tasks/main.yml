@@ -1,6 +1,11 @@
+- name: Load task info
+  include_vars:
+    file: "../../../challenge/{{ challenge }}/task.yml"
+    name: "task"
+
 - name: Copy a challenge directory to the server
   copy:
-    src: "../../../../challenge/{{ challenge }}"
+    src: "../../../challenge/{{ challenge }}"
     dest: "/home/{{ username }}"
 
 # community.general.docker-compose はなんかうまく動かない
@@ -9,4 +14,9 @@
     chdir: "/home/{{ username }}/{{ challenge | basename }}"
     cmd: "docker-compose up -d"
 
-
+- name: "Run packet capture"
+  include_role:
+    name: tcpdump
+  vars:
+    chal: "{{challenge|regex_replace('/', '_')}}"
+  when: task.port is defined

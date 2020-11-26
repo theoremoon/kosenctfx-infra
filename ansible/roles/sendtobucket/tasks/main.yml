@@ -1,0 +1,12 @@
+- name: Include AWS configration variable
+  include_vars:
+    file: "../../../aws.yml"
+    name: aws
+
+- name: Place sendtobucket script
+  template:
+    src: "sendtobucket.j2"
+    dest: "/usr/bin/sendtobucket"
+    owner: root
+    group: root
+    mode: "0755"
