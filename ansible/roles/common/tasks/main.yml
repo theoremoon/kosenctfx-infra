@@ -13,7 +13,7 @@
     name: "{{ packages }}"
     update_cache: yes
   vars:
-    packages: ["zsh", "vim", "curl", "iptables", "ipset", "tcpdump", "python3-pip"]
+    packages: ["zsh", "vim", "curl", "iptables", "ipset", "tcpdump", "python3-pip", "apparmor-utils"]
 
 - name: sudo without password
   lineinfile:
@@ -26,3 +26,6 @@
   pip:
     name: s3cmd
     state: present
+
+- name: make tcpdump complain mode
+  command: aa-complain /usr/sbin/tcpdump
