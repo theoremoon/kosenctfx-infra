@@ -1,0 +1,15 @@
+stages:
+  - deploy
+
+run_ansible:
+  stage: deploy
+  image: python:3.8
+  before_script:
+    - pip install ansible
+  script:
+    - cd ansible
+    - export ANSIBLE_CONFIG=$(pwd)
+    - bash ./run.bash
+  only:
+    - master
+
