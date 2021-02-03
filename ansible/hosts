@@ -1,2 +1,12 @@
 [host1]
-157.230.212.205
+server1 private_ip=192.168.99.11
+
+[host2]
+server2 private_ip=192.168.99.12
+
+[challenges:children]
+host1
+host2
+
+[monitor]
+monitor

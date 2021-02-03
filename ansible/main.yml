@@ -2,17 +2,36 @@
   become: yes
   roles:
     - common
-    - sendtobucket
     - user
+- hosts: challenges
+  become: yes
+  roles:
+    # - sendtobucket
     - docker
     - iptables
-    # - hosts: host1
-    #   become: no
-    #   remote_user: "{{ username }}"
-    #   tasks:
-    #     - include_role:
-    #         name: challenge
-    #       with_items: [ "crypto/padding_oracle" ]
-    #       loop_control:
-    #         loop_var: "challenge"
+    - role: node_exporter
+      vars:
+        collectors:
+          - cpu: disabled
+- hosts: monitor
+  become: yes
+  roles:
+    - role: prometheus
+      vars:
+        prometheus_targets:
+          - targets:
+              - "192.168.99.11:9100"
+              - "192.168.99.12:9100"
+            labels:
+              service: server
+              role: role
 
+# - hosts:
+#   become: no
+#   remote_user: "{{ username }}"
+#   tasks:
+#     - include_role:
+#         name: challenge
+#       with_items: [ "crypto/padding_oracle" ]
+#       loop_control:
+#         loop_var: "challenge"

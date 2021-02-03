@@ -1,0 +1,27 @@
+[Unit]
+After=network-online.target
+After=local-fs.target
+
+[Service]
+Type=simple
+Restart=always
+User=node_exporter
+Group=node_exporter
+PrivateTmp=true
+PrivateDevices=true
+ProtectHome=true
+ExecStart=/usr/local/bin/node_exporter \
+    --web.listen-address={{ listen }}
+    --web.telemetry-path="/metrics" \
+    {% for c in collectors %}
+    {% for k, v in c.items() %}
+        {% if v == "disabled" %}
+        --nocollector.{{k}}\
+        {% else %}
+        --collector.{{k}}={{v|quote}}\
+        {% endif %}
+    {% endfor %}
+    {% endfor %}
+
+[Install]
+WantedBy=multi-user.target
