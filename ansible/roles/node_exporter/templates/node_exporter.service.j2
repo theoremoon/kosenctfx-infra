@@ -18,7 +18,7 @@ ExecStart=/usr/local/bin/node_exporter \
         {% if v == "disabled" %}
         --nocollector.{{k}}\
         {% else %}
-        --collector.{{k}}={{v|quote}}\
+        --collector.{{k}}\
         {% endif %}
     {% endfor %}
     {% endfor %}

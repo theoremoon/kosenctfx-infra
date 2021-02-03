@@ -1,0 +1,34 @@
+- name: add gpg key
+  apt_key:
+    url: "https://packages.grafana.com/gpg.key"
+    state: present
+    validate_certs: false
+
+- name: add apt repository
+  apt_repository:
+    repo: "deb https://packages.grafana.com/oss/deb stable main"
+    state: present
+    update_cache: true
+
+- name: install grafana
+  package:
+    name: grafana
+    state: present
+
+- name: locate grafana.ini
+  template:
+  template:
+    src: grafana.ini.j2
+    dest: "/etc/grafana/grafana.ini"
+    owner: root
+    group: grafana
+    mode: 0644
+
+- name: start grafana systemd unit
+  systemd:
+    name: "grafana-server.service"
+    state: started
+    daemon_reload: yes
+    enabled: yes
+
+
