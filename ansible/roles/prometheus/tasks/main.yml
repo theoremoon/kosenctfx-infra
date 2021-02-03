@@ -1,0 +1,108 @@
+- name: create prometheus group
+  group:
+    name: prometheus
+    system: true
+    state: present
+
+- name: create prometheus user
+  user:
+    name: prometheus
+    system: true
+    shell: "/usr/sbin/nologin"
+    group: prometheus
+    createhome: false
+    home: "{{ db_dir }}"
+
+- name: create prometheus directory
+  file:
+    path: "{{ db_dir }}"
+    state: directory
+    owner: prometheus
+    group: prometheus
+    mode: 0755
+
+- name: create prometheus config directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: prometheus
+    mode: 0775
+  with_items:
+    - "{{ config_dir }}"
+    - "{{ config_dir }}/rules"
+    - "{{ config_dir }}/file_sd"
+
+- name: check is prometheus already installed
+  stat:
+    path: /usr/local/bin/prometheus
+  register: prometheus_bin
+
+- block:
+  - name: download prometheus release
+    unarchive:
+      src: "https://github.com/prometheus/prometheus/releases/download/v{{version}}/prometheus-{{version}}.{{arch}}.tar.gz"
+      dest: "/tmp"
+      remote_src: yes
+
+  - name: place prometheus binaries
+    copy:
+      src: "/tmp/prometheus-{{version}}.{{arch}}/{{ item }}"
+      dest: "/usr/local/bin/{{ item }}"
+      mode: 0755
+      owner: root
+      group: root
+      remote_src: yes
+    with_items:
+      - "prometheus"
+      - "promtool"
+
+  - name: put prometheus configs
+    copy:
+      src: "/tmp/prometheus-{{version}}.{{arch}}/{{ item }}"
+      dest: "{{ config_dir }}/"
+      mode: 0655
+      owner: root
+      group: prometheus
+      remote_src: yes
+    with_items:
+      - "console_libraries"
+      - "consoles"
+  when: not prometheus_bin.stat.exists
+
+- name: put prometheus yml
+  template:
+    src: prometheus.yml.j2
+    dest: "{{ config_dir }}/prometheus.yml"
+    mode: 0644
+    owner: root
+    group: prometheus
+
+- name: create file_sd
+  copy:
+    content: |
+      {{ [item] | to_nice_yaml(indent=2) }}
+    dest: "{{ config_dir }}/file_sd/targets.yml"
+    owner: root
+    group: prometheus
+    mode: 0644
+  with_items:
+    - "{{ prometheus_targets }}"
+  when: prometheus_targets
+
+
+- name: place systemd prometheus unit file
+  template:
+    src: prometheus.service.j2
+    dest: "/etc/systemd/system/prometheus.service"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: start prometheus unit file
+  systemd:
+    name: "prometheus.service"
+    state: started
+    daemon_reload: yes
+    enabled: yes
+
