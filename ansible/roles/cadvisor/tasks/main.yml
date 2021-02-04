@@ -1,0 +1,19 @@
+- name: run cAdvisor
+  docker_container:
+    name: cadvisor
+    image: gcr.io/cadvisor/cadvisor
+    volumes:
+      - "/:/rootfs:ro"
+      - "/var/run:/var/run:rw"
+      - "/sys:/sys:ro"
+      - "/var/lib/docker/:/var/lib/docker:ro"
+      - "/dev/disk/:/dev/disk:ro"
+    privileged: yes
+    detach: yes
+    state: started
+    restart_policy: always
+    published_ports:
+      - "{{ private_ip }}:8080:{{ port }}"
+    devices:
+      - "/dev/kmsg"
+    name: cadvisor

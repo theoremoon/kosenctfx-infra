@@ -31,7 +31,6 @@
   with_items:
     - "{{ config_dir }}"
     - "{{ config_dir }}/rules"
-    - "{{ config_dir }}/file_sd"
 
 - name: check is prometheus already installed
   stat:
@@ -77,19 +76,6 @@
     mode: 0644
     owner: root
     group: prometheus
-
-- name: create file_sd
-  copy:
-    content: |
-      {{ [item] | to_nice_yaml(indent=2) }}
-    dest: "{{ config_dir }}/file_sd/targets.yml"
-    owner: root
-    group: prometheus
-    mode: 0644
-  with_items:
-    - "{{ prometheus_targets }}"
-  when: prometheus_targets
-
 
 - name: place systemd prometheus unit file
   template:

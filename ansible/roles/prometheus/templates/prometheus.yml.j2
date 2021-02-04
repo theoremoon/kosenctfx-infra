@@ -23,8 +23,9 @@ rule_files:
 # Here it's Prometheus itself.
 scrape_configs:
   - job_name: 'nodes'
-    file_sd_configs:
-      - files:
-        - "{{ config_dir }}/file_sd/targets.yml"
-
+    static_configs:
+      - targets: [{% for t in node_targets %}{{ t }}:{{ node_port }} {{loop.last | ternary('', ',') }}{% endfor %}]
+  - job_name: 'containers'
+    static_configs:
+      - targets: [{% for t in container_targets %}{{ t }}:{{ cadvisor_port }} {{loop.last | ternary('', ',') }}{% endfor %}]
 

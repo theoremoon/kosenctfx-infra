@@ -35,3 +35,6 @@
     owner: root
     group: root
 
+- name: install Docker SDK for python
+  pip:
+    name: docker

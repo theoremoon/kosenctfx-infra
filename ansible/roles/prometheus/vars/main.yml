@@ -3,3 +3,5 @@ config_dir: "/etc/prometheus"
 version: "2.24.1"
 arch: "linux-amd64"
 listen: "0.0.0.0:9000"
+node_port: 9100
+cadvisor_port: 8080

@@ -13,18 +13,18 @@
       vars:
         collectors:
           - processes: enabled
+    - cadvisor
 - hosts: monitor
   become: yes
   roles:
     - role: prometheus
       vars:
-        prometheus_targets:
-          - targets:
-              - "192.168.99.11:9100"
-              - "192.168.99.12:9100"
-            labels:
-              service: server
-              role: role
+        node_targets:
+          - "192.168.99.11"
+          - "192.168.99.12"
+        container_targets:
+          - "192.168.99.11"
+          - "192.168.99.12"
     - grafana
 
 # - hosts:
