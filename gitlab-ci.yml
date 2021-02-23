@@ -13,3 +13,22 @@ run_ansible:
   only:
     - master
 
+challenge_update:
+  stage: deploy
+  image: golang:latest
+  before_script:
+    - go get github.com/theoremoon/kosenctfx/scoreserver/cmd/kosenctfx-cli
+  script:
+    - kosenctfx-cli -dir "challenges" -hashfile challenges.hash -token "$token" -url "$url"
+    - git config user.name "$GITLAB_USER_ID"
+    - git config user.email "$GITLAB_USER_EMAIL"
+    - git remote set-url origin "$CI_REPOSITORY_URL"
+    - git add -u
+    - |-
+      if [ `git status -s | wc -l` -gt 0 ]; then
+        git commit -m "update challenge checksum"
+        git push --push-option=ci.skip origin "$CI_COMMIT_REF_NAME"
+      fi
+  only:
+    - master
+

@@ -7,16 +7,20 @@
   copy:
     src: "../../../challenge/{{ challenge }}"
     dest: "/home/{{ username }}"
+  register: copied
 
 # community.general.docker-compose はなんかうまく動かない
 - name: Start challenge
   shell:
     chdir: "/home/{{ username }}/{{ challenge | basename }}"
     cmd: "docker-compose up -d"
+  when: not copied.skipped
 
 - name: "Run packet capture"
   include_role:
     name: tcpdump
   vars:
     chal: "{{challenge|regex_replace('/', '_')}}"
-  when: task.port is defined
+  when:
+    - task.port is defined
+    - not copied.skipped
