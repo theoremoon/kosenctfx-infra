@@ -1,5 +1,6 @@
 stages:
   - deploy
+  - update_challenge
 
 run_ansible:
   stage: deploy
@@ -13,13 +14,14 @@ run_ansible:
   only:
     - master
 
-challenge_update:
-  stage: deploy
+update_challenge:
+  stage: update_challenge
   image: golang:latest
   before_script:
+    - [ -z "${KOSENCTFX_URL+x}" ] && exit
     - go get github.com/theoremoon/kosenctfx/scoreserver/cmd/kosenctfx-cli
   script:
-    - kosenctfx-cli -dir "challenges" -hashfile challenges.hash -token "$token" -url "$url"
+    - kosenctfx-cli -dir "challenges" -hashfile challenges.hash -token "$KOSENCTFX_TOKEN" -url "$KOSENCTFX_URL"
     - git config user.name "$GITLAB_USER_ID"
     - git config user.email "$GITLAB_USER_EMAIL"
     - git remote set-url origin "$CI_REPOSITORY_URL"
