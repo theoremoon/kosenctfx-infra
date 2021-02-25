@@ -3,11 +3,11 @@
   roles:
     - common
     - user
+    - docker
 - hosts: challenges
   become: yes
   roles:
     # - sendtobucket
-    - docker
     - iptables
     - role: node_exporter
       vars:

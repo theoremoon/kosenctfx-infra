@@ -14,7 +14,7 @@
   shell:
     chdir: "/home/{{ username }}/{{ challenge | basename }}"
     cmd: "docker-compose up -d"
-  when: not copied.skipped
+  when: copied.changed
 
 - name: "Run packet capture"
   include_role:
@@ -23,4 +23,4 @@
     chal: "{{challenge|regex_replace('/', '_')}}"
   when:
     - task.port is defined
-    - not copied.skipped
+    - copied.changed
