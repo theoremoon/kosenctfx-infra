@@ -16,4 +16,3 @@
       - "{{ private_ip }}:8080:{{ port }}"
     devices:
       - "/dev/kmsg"
-    name: cadvisor

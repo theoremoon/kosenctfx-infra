@@ -17,7 +17,6 @@
 
 - name: locate grafana.ini
   template:
-  template:
     src: grafana.ini.j2
     dest: "/etc/grafana/grafana.ini"
     owner: root
