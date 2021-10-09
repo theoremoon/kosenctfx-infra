@@ -1,3 +1,0 @@
-version: "1.0.1"
-arch: "linux-amd64"
-listen: "{{ private_ip }}:9100"

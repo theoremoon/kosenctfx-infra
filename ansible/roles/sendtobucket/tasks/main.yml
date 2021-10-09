@@ -1,7 +1,12 @@
-- name: Include AWS configration variable
+- name: Include Bucket configration variable
   include_vars:
-    file: "../../../aws.yml"
-    name: aws
+    file: "../../../bucket.yml"
+    name: bucket
+
+- name: get accesskey / secret key
+  set_fact:
+    bucket_access_key: "{{ lookup('env', 'BUCKET_ACCESS_KEY') }}"
+    bucket_secret_key: "{{ lookup('env', 'BUCKET_SECRET_KEY') }}"
 
 - name: Place sendtobucket script
   template:

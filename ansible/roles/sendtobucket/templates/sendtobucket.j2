@@ -1,3 +1,3 @@
 #!/bin/bash
 
-s3cmd --access_key="{{aws.access_key}}" --secret_key="{{aws.secret_key}}" --host="{{aws.host}}" --host-bucket="%(bucket)s.{{aws.host}}" put "$1" "s3://{{aws.bucket}}/" && rm "$1"
+s3cmd --access_key="{{bucket_access_key}}" --secret_key="{{bucket_secret_key}}" --host="{{bucket.host}}" --host-bucket="%(bucket)s.{{bucket.host}}" put "$1" "s3://{{bucket.bucket}}/" && rm "$1"

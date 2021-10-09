@@ -1,12 +1,13 @@
-[host1]
-server1 private_ip=192.168.99.11
+[web]
 
-[host2]
-server2 private_ip=192.168.99.12
+[pwn]
+
+[misc]
+
+[others]
 
 [challenges:children]
-host1
-host2
-
-[monitor]
-monitor
+web
+pwn
+misc
+others

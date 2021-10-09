@@ -21,7 +21,7 @@
     state: present
     manage_dir: yes
   with_fileglob:
-    - "*.pub"
+    - "../../../keys/*.pub"
 
 - name: "use grml.org's zshrc by default"
   get_url:

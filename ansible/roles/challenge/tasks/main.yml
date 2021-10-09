@@ -4,9 +4,13 @@
     name: "task"
 
 - name: Copy a challenge directory to the server
-  copy:
+  synchronize:
     src: "../../../challenge/{{ challenge }}"
     dest: "/home/{{ username }}"
+    checksum: yes
+    times: no
+    owner: no
+    group: no
   register: copied
 
 # community.general.docker-compose はなんかうまく動かない

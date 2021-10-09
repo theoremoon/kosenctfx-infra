@@ -10,7 +10,7 @@
 - name: Run daemon
   systemd:
     name: "tcpdump-{{chal}}.service"
-    state: started
+    state: stopped
     daemon_reload: yes
-    enabled: yes
+    enabled: no
   become: yes

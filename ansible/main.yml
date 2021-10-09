@@ -3,36 +3,23 @@
   roles:
     - common
     - user
-    - docker
+
 - hosts: challenges
   become: yes
   roles:
-    # - sendtobucket
+    - sendtobucket
+    - docker
     - iptables
-    - role: node_exporter
-      vars:
-        collectors:
-          - processes: enabled
-    - cadvisor
-- hosts: monitor
-  become: yes
-  roles:
-    - role: prometheus
-      vars:
-        node_targets:
-          - "192.168.99.11"
-          - "192.168.99.12"
-        container_targets:
-          - "192.168.99.11"
-          - "192.168.99.12"
-    - grafana
 
-# - hosts:
-#   become: no
-#   remote_user: "{{ username }}"
-#   tasks:
-#     - include_role:
-#         name: challenge
-#       with_items: [ "crypto/padding_oracle" ]
-#       loop_control:
-#         loop_var: "challenge"
+- hosts: web
+  become: no
+  remote_user: "{{ username }}"
+  tasks:
+    - include_role:
+        name: challenge
+      async: 300
+      poll: 0
+      with_items: []
+      loop_control:
+        loop_var: "challenge"
+
